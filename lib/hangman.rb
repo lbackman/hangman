@@ -20,6 +20,11 @@ class Game
     # Then lose
     # Else win
   end
+
+  def print_guess
+    @word.split('').map { |l| @letters_guessed.include?(l) ? l : '_' }
+  end
+     
 end
 
 def get_words(textfile)
