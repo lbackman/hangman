@@ -4,7 +4,7 @@
 class Game
   def initialize(word)
     @word = word
-    @letters_guessed = []
+    @guessed = []
     @letters_wrong = []
     @letters_correct = []
     @wrong_guess_count = 0
@@ -22,7 +22,7 @@ class Game
   end
 
   def print_guess
-    @word.split('').map { |l| @letters_guessed.include?(l) ? l : '_' }
+    @word.split('').map { |l| @guessed.include?(l) ? l : '_' }.join(' ')
   end
      
 end
