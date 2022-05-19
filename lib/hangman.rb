@@ -6,7 +6,6 @@ class Game
     @word = word
     @guessed = []
     @letters_wrong = []
-    @letters_correct = []
     @wrong_guess_count = 0
   end
 
@@ -21,19 +20,35 @@ class Game
     # Else win
   end
 
-  def get_letter
-    puts "Guess a letter!"
-    v = gets.chomp.downcase
-    return get_letter unless v.match?(/^[[:alpha:][:blank:]]+$/)
+  def guess_letter
+    puts 'Guess a letter!'
+    letter = gets.chomp.downcase
+    return get_letter unless letter.match?(/^[[:alpha:][:blank:]]+$/)
 
-    puts "only keeping first letter" if v.length > 1
-    v.chr
+    puts 'Only keeping first letter' if letter.length > 1
+    if @guessed.include?(letter)
+      letter.chr
+    else
+      puts 'Already guessed that!'
+      guess_letter
+    end
+  end
+
+  def sort_letter
+    letter = guess_letter
+    @guessed << letter
+    if @word.include?(letter)
+      puts "#{letter.upcase} is in #{@word}!"
+      print_guess
+    else
+      puts "#{letter.upcase} is not in #{@word} :("
+      @wrong_guess_count += 1
+    end
   end
 
   def print_guess
     @word.split('').map { |l| @guessed.include?(l) ? l : '_' }.join(' ')
   end
-     
 end
 
 def get_words(textfile)
