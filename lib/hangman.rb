@@ -23,14 +23,14 @@ class Game
   def guess_letter
     puts 'Guess a letter!'
     letter = gets.chomp.downcase
-    return get_letter unless letter.match?(/^[[:alpha:][:blank:]]+$/)
+    return guess_letter unless letter.match?(/^[a-z]+/)
 
-    puts 'Only keeping first letter' if letter.length > 1
-    if @guessed.include?(letter)
-      letter.chr
-    else
+    if @guessed.include?(letter.chr)
       puts 'Already guessed that!'
       guess_letter
+    else
+      puts 'Only keeping first letter' if letter.length > 1
+      letter.chr
     end
   end
 
