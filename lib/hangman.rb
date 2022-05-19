@@ -21,6 +21,15 @@ class Game
     # Else win
   end
 
+  def get_letter
+    puts "Guess a letter!"
+    v = gets.chomp.downcase
+    return get_letter unless v.match?(/^[[:alpha:][:blank:]]+$/)
+
+    puts "only keeping first letter" if v.length > 1
+    v.chr
+  end
+
   def print_guess
     @word.split('').map { |l| @guessed.include?(l) ? l : '_' }.join(' ')
   end
