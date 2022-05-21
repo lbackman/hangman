@@ -7,17 +7,19 @@ class Game
     @guessed = []
     @letters_wrong = []
     @wrong_guess_count = 0
+    @allowed_wrong_guesses = @word.length
   end
 
   def play
-    # Have player guess a word by giving a letter
-    # If word.include? letter => reveal letter in word
-    # and add letter to the letters_correct array
-    # If not, increase wrong_guess_count
-    # and add letter to the letters_wrong array
-    # Unless win before wrong_guess_count reaches N (TBD)
-    # Then lose
-    # Else win
+    puts @word
+    until @wrong_guess_count > @word.length
+      sort_letter
+      if win?
+        puts "Congratulations, you guessed the correct word: #{@word}!"
+        return
+      end
+    end
+    puts "You lost! The correct answer was #{@word}."
   end
 
   def guess_letter
@@ -38,11 +40,15 @@ class Game
     letter = guess_letter
     @guessed << letter
     if @word.include?(letter)
-      puts "#{letter.upcase} is in #{@word}!"
-      print_guess
+      puts "#{letter.upcase} is in the word!"
+      puts print_guess
     else
-      puts "#{letter.upcase} is not in #{@word} :("
+      puts "#{letter.upcase} is not in the word :("
       @wrong_guess_count += 1
+      if (@allowed_wrong_guesses - @wrong_guess_count) >= 0
+        puts "You now have #{@allowed_wrong_guesses - @wrong_guess_count} "\
+        "wrong guesses left."
+      end
     end
   end
 
@@ -64,4 +70,4 @@ def correct_length?(word)
 end
 
 words = get_words('wordlist.txt')
-10.times { puts words.sample }
+Game.new(words.sample).play
