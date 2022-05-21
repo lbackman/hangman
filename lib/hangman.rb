@@ -11,7 +11,7 @@ class Game
 
   def play
     # Have player guess a word by giving a letter
-    # If word.inlcude? letter => reveal letter in word
+    # If word.include? letter => reveal letter in word
     # and add letter to the letters_correct array
     # If not, increase wrong_guess_count
     # and add letter to the letters_wrong array
@@ -48,6 +48,10 @@ class Game
 
   def print_guess
     @word.split('').map { |l| @guessed.include?(l) ? l : '_' }.join(' ')
+  end
+
+  def win?
+    !print_guess.include?('_')
   end
 end
 
