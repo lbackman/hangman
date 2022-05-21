@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
 # Hangman game
 class Game
   def initialize(word)
@@ -11,7 +13,10 @@ class Game
   end
 
   def play
-    puts @word
+    # toggle comment below line for troubleshooting
+    # puts @word
+    puts print_guess if @guessed[0]
+    puts print_wrongs if @letters_wrong[0]
     until @wrong_guess_count > @word.length
       sort_letter
       if win?
@@ -23,12 +28,16 @@ class Game
   end
 
   def guess_letter
-    puts 'Guess a letter!'
+    puts 'Guess a letter! Or press 1 to save.'
     letter = gets.chomp.downcase
-    return guess_letter unless letter.match?(/^[a-z]+/)
-
-    if @guessed.include?(letter.chr)
+    return guess_letter unless letter.match?(/^[[a-z][1]]+/)
+    if letter == '1'
+      save_game
+      guess_letter
+    elsif @guessed.include?(letter.chr)
       puts 'Already guessed that!'
+      puts print_guess
+      puts print_wrongs
       guess_letter
     else
       puts 'Only keeping first letter' if letter.length > 1
@@ -49,7 +58,7 @@ class Game
   def letter_in_word(letter)
     puts "'#{letter.upcase}' is in the word!"
     puts print_guess
-    puts "Wrong guesses: ( #{print_wrongs} )." if @letters_wrong[0]
+    puts print_wrongs if @letters_wrong[0]
   end
 
   def not_in_word(letter)
@@ -60,7 +69,7 @@ class Game
       puts "You now have #{@allowed_wrong_guesses - @wrong_guess_count} "\
       "wrong guesses left."
       puts print_guess
-      puts "Wrong guesses: ( #{print_wrongs} )."
+      puts print_wrongs
     end
   end
 
@@ -69,11 +78,16 @@ class Game
   end
 
   def print_wrongs
-    @letters_wrong.sort.join(' ')
+    "Wrong guesses: ( #{@letters_wrong.sort.join(' ')} )."
   end
 
   def win?
     !print_guess.include?('_')
+  end
+
+  def save_game
+    File.open('savegame.yaml', 'w') { |file| file.write(self.to_yaml) }
+    puts 'Game saved!'
   end
 end
 
@@ -85,5 +99,23 @@ def correct_length?(word)
   word.length >= 5 && word.length <= 12
 end
 
-words = get_words('wordlist.txt')
-Game.new(words.sample).play
+def hangman
+  words = get_words('wordlist.txt')
+  puts "Press 1 to start a new game\n"\
+       "Press 2 to load an existing game\n"\
+       "Press any other key to quit"
+  input = gets.to_i
+  case input
+  when 1
+    Game.new(words.sample).play
+    hangman
+  when 2
+    puts 'Loading game...'
+    game_file = File.open('savegame.yaml', 'r') { |file| file.read }
+    game = YAML::load(game_file)
+    game.play
+    hangman
+  end
+end
+
+hangman

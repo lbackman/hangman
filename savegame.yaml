@@ -1,0 +1,10 @@
+--- !ruby/object:Game
+word: content
+guessed:
+- t
+- b
+- c
+letters_wrong:
+- b
+wrong_guess_count: 1
+allowed_wrong_guesses: 7
