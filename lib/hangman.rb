@@ -40,20 +40,36 @@ class Game
     letter = guess_letter
     @guessed << letter
     if @word.include?(letter)
-      puts "#{letter.upcase} is in the word!"
-      puts print_guess
+      letter_in_word(letter)
     else
-      puts "#{letter.upcase} is not in the word :("
-      @wrong_guess_count += 1
-      if (@allowed_wrong_guesses - @wrong_guess_count) >= 0
-        puts "You now have #{@allowed_wrong_guesses - @wrong_guess_count} "\
-        "wrong guesses left."
-      end
+      not_in_word(letter)
+    end
+  end
+
+  def letter_in_word(letter)
+    puts "#{letter.upcase} is in the word!"
+    puts print_guess
+    puts "Wrong guesses: ( #{print_wrongs} )."
+  end
+
+  def not_in_word(letter)
+    puts "#{letter.upcase} is not in the word :("
+    @letters_wrong << letter
+    @wrong_guess_count += 1
+    if (@allowed_wrong_guesses - @wrong_guess_count) >= 0
+      puts "You now have #{@allowed_wrong_guesses - @wrong_guess_count} "\
+      "wrong guesses left."
+      puts print_guess
+      puts "Wrong guesses: ( #{print_wrongs} )."
     end
   end
 
   def print_guess
     @word.split('').map { |l| @guessed.include?(l) ? l : '_' }.join(' ')
+  end
+
+  def print_wrongs
+    @letters_wrong.sort.join(' ')
   end
 
   def win?
