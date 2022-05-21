@@ -47,13 +47,13 @@ class Game
   end
 
   def letter_in_word(letter)
-    puts "#{letter.upcase} is in the word!"
+    puts "'#{letter.upcase}' is in the word!"
     puts print_guess
-    puts "Wrong guesses: ( #{print_wrongs} )."
+    puts "Wrong guesses: ( #{print_wrongs} )." if @letters_wrong[0]
   end
 
   def not_in_word(letter)
-    puts "#{letter.upcase} is not in the word :("
+    puts "'#{letter.upcase}' is not in the word :("
     @letters_wrong << letter
     @wrong_guess_count += 1
     if (@allowed_wrong_guesses - @wrong_guess_count) >= 0
